@@ -1,0 +1,11 @@
+/* Sixty-Four — the "spot it" trainers (js/train-spot.js). */
+
+.spot-q { font: 600 1.45rem/1.4 var(--serif); text-wrap: balance; }
+.spot-q .mv { font-size: .95em; }
+.spot-side { white-space: nowrap; }
+.spot-side::before {
+  content: ''; display: inline-block; width: .62em; height: .62em; margin-right: .28em; border-radius: 50%;
+  border: .09em solid var(--muted); vertical-align: .02em;
+}
+.spot-side.w::before { background: #fbf7ee; }
+.spot-side.b::before { background: #1c1915; }

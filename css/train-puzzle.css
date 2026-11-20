@@ -1,0 +1,24 @@
+/* Sixty-Four — puzzle and opening trainers (js/train-puzzle.js) */
+
+/* puzzle rush: three strike marks in the timer row */
+.strikes { display: inline-flex; gap: 6px; align-items: center; }
+.strike {
+  width: 1.6em; height: 1.6em; display: grid; place-items: center; border-radius: 50%;
+  border: 1px solid var(--line); font-size: .8rem; font-weight: 700; line-height: 1;
+}
+.strike.on { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+.rush-side .status { margin: 0; }
+
+/* rated puzzles: the last change, and the rating history */
+.rating-delta { font: 700 .92rem var(--mono); margin-left: 8px; }
+.rating-delta.up { color: var(--good); }
+.rating-delta.down { color: var(--bad); }
+.spark-host { margin-left: auto; flex: none; }
+.spark { display: block; width: 120px; height: 36px; color: var(--accent); overflow: visible; }
+
+/* name the opening: the key number on each choice */
+.choice .mv { margin-right: 6px; }
+
+@media (max-width: 480px) {
+  .spark-host { display: none; }
+}
