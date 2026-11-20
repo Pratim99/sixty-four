@@ -1,0 +1,5 @@
+# Build output: made by tools/build-exe.js and tools/build-site.js
+dist/
+# Local editor and assistant settings
+.claude/
+node_modules/
