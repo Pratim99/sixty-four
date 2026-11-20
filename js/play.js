@@ -63,15 +63,17 @@
       function engines() {
         engineNote.textContent = CL.brain.hasStockfish()
           ? 'Up to 1300 you play the built-in bot, which makes human-looking mistakes. From 1350 upwards you play Stockfish 19, held back to the rating you choose; the top of the slider removes the limit.'
-          : 'Stockfish is not available here (it needs the app to be opened through the local server), so the slider stops at 1800 with the built-in bot.';
+          : CL.brain.whyNot() + ', so for now the slider stops at 1800 with the built-in bot.';
       }
-      CL.brain.init().then(function () {
+      function ready() {
         if (mine !== token) return;
         slider.max = String(CL.brain.maxElo());
         top.textContent = String(CL.brain.maxElo());
         engines();
         paint();
-      });
+      }
+      CL.brain.init().then(ready);
+      CL.brain.loaded().then(ready);      // a slow download: open up the slider when the engine arrives
       function paint() {
         var L = CL.botLevel(elo);
         num.textContent = elo; name.textContent = L.name; detail.textContent = L.detail;

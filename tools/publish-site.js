@@ -35,7 +35,8 @@ run('git', ['config', 'core.autocrlf', 'false'], WORK);   // publish the files b
 run('git', ['add', '-A'], WORK);
 run('git', ['-c', 'user.name=' + name, '-c', 'user.email=' + email,
   'commit', '-q', '-m', 'Publish site ' + version + ' (from ' + source + ')'], WORK);
-run('git', ['push', '-q', '--force', remote, 'gh-pages'], WORK);
+var ssl = run('git', ['config', '--local', 'http.sslBackend'], ROOT, true);   // use the same certificate store as this repository
+run('git', (ssl ? ['-c', 'http.sslBackend=' + ssl] : []).concat(['push', '-q', '--force', remote, 'gh-pages']), WORK);
 fs.rmSync(WORK, { recursive: true, force: true });
 
 var m = /github\.com[:/]([^/]+)\/([^/]+?)(?:\.git)?$/.exec(remote);

@@ -190,7 +190,7 @@
       panel.appendChild(how);
       CL.brain.init().then(function (ok) {
         how.textContent = ok ? 'Stockfish 19 is checking each of your moves against its own choice. It looks up to 18 half-moves deep, with at most a second or so per move.'
-          : 'The built-in engine is checking each of your moves against its own choice. It is a decent club player, not a grandmaster. Open the app through the local server to have Stockfish do this instead.';
+          : 'The built-in engine is checking each of your moves against its own choice. It is a decent club player, not a grandmaster. ' + CL.brain.whyNot() + '.';
       });
       CL.brain.review(game.sans, game.color, function (r) {
         if (!alive) return;
@@ -293,7 +293,7 @@
       var by = h('p.muted.small.gap', { text: 'Reviewed by ' + (rv.engine === 'Stockfish 19' ? 'Stockfish 19' : 'the built-in engine') + '.' });
       panel.appendChild(by);
       if (rv.engine !== 'Stockfish 19') {
-        CL.brain.init().then(function (ok) {
+        CL.brain.loaded().then(function (ok) {
           if (!ok || !alive) return;
           by.appendChild(document.createTextNode(' '));
           by.appendChild(h('button.btn.small', { text: 'Review again with Stockfish', onclick: function () { goFn = null; analyse(); } }));

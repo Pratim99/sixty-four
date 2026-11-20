@@ -2,6 +2,13 @@
 
 A self-contained chess course that starts with the board itself, plus a bot to play, a review of your games, and puzzles.
 
+**Use it now: https://pratim99.github.io/sixty-four/** on any phone, tablet or computer. Nothing to install.
+
+To keep it on a phone like an app (it then also works without a connection):
+
+- **iPhone or iPad:** open the address in Safari, tap Share, then "Add to Home Screen".
+- **Android:** open the address in Chrome, tap the menu (⋮), then "Add to Home screen" or "Install app".
+
 ## Three ways to give it to people
 
 Run `node tools/build-exe.js` and then `node tools/build-site.js`. That produces everything in `dist/`:
@@ -97,7 +104,10 @@ node tools/test-train-*.js   tests for the trainers' question generators (run ea
 node tools/build-exe.js      rebuilds dist/Sixty-Four.exe after any change to the app
 node tools/build-site.js     rebuilds dist/site and the Windows zip (run after build-exe)
 node tools/make-icons.js     redraws the app icons
+node tools/publish-site.js   rebuilds the website and puts it online (GitHub Pages, "gh-pages" branch)
 ```
+
+After changing the app, `node tools/publish-site.js` is all it takes to update the live site; phones pick up the new version the next time they open it with a connection.
 
 The .exe is built with the C# compiler that ships with Windows, so building it needs no downloads. It is not code-signed, so Windows may show an "unknown publisher" warning if you send it to another computer.
 

@@ -147,16 +147,31 @@
     all.forEach(function (j) { j.reject(new Error('Stockfish stopped')); });
   }
 
+  /* Resolves to true once Stockfish is usable. Nobody is kept waiting more than twelve seconds:
+     on a slow connection (a phone fetching the engine for the first time) callers carry on with
+     the built-in engine, the download continues, and Stockfish takes over once it has arrived. */
+  var sfSlow = false, sfFailed = false;
   function sfStart() {
+    var load = sfLoad();
+    if (sfReady) return load;
+    if (sfSlow) return Promise.resolve(false);
+    return Promise.race([load, new Promise(function (resolve) {
+      setTimeout(function () { if (!sfReady) sfSlow = true; resolve(sfReady); }, 12000);
+    })]);
+  }
+
+  function sfLoad() {
     if (sfInit) return sfInit;
+    sfSlow = false; sfFailed = false;
     sfInit = new Promise(function (resolve) {
       var settled = false, timer = null;
       function finish(ok) {
         if (settled) return;
         settled = true;
         clearTimeout(timer);
+        sfSlow = false;
         if (ok) sfReady = true;
-        else { sfFail(); setTimeout(function () { sfInit = null; }, 3000); }   // allow another try later
+        else { sfFailed = true; sfFail(); setTimeout(function () { sfInit = null; }, 3000); }   // allow another try later
         resolve(ok);
       }
       if (location.protocol === 'file:' || typeof Worker === 'undefined') return finish(false);
@@ -169,7 +184,7 @@
           sfLine(line);
         };
         sf.postMessage('uci');
-        timer = setTimeout(function () { finish(false); }, 12000);
+        timer = setTimeout(function () { finish(false); }, 120000);   // give up on a download that never ends
       } catch (e) { finish(false); }
     });
     return sfInit;
@@ -205,6 +220,14 @@
   CL.brain = {
     /* Resolves to true if Stockfish is available. Safe to call often. */
     init: sfStart,
+    /* Like init, but waits for the engine however long the download takes. */
+    loaded: sfLoad,
+    /* Why Stockfish is missing, in words a reader can act on. */
+    whyNot: function () {
+      if (location.protocol === 'file:') return 'Stockfish cannot start when the page is opened as a plain file';
+      if (sfInit && !sfFailed) return 'Stockfish is still loading';
+      return 'Stockfish could not be started in this browser';
+    },
     hasStockfish: function () { return sfReady; },
     name: function () { return sfReady ? 'Stockfish 19' : 'the built-in engine'; },
     maxElo: function () { return sfReady ? SF_FULL : 1800; },
